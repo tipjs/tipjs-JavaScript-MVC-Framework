@@ -21,7 +21,7 @@ tipJS.ver = tipJS.version = "1.33";
 	 */
 	var __getById = function(id, obj){
 		return !obj ? document.getElementById(id):obj.getElementById(id);
-	}
+	};
 
 	/**
 	 * obj 로부터 name 를 통해 objects 획득
@@ -32,7 +32,7 @@ tipJS.ver = tipJS.version = "1.33";
 	 */
 	var __getByName = function(name, obj){
 		return !obj ? document.getElementsByName(name):obj.getElementsByName(name);
-	}
+	};
 
 	/**
 	 * obj 로부터 tag 를 통해 objects 획득
@@ -43,7 +43,7 @@ tipJS.ver = tipJS.version = "1.33";
 	 */
 	var __getByTag = function(tag, obj){
 		return !obj ? document.getElementsByTagName(tag):obj.getElementsByTagName(tag);
-	}
+	};
 	
 	/**
 	 * 정의 에러 메세지취득
@@ -53,7 +53,7 @@ tipJS.ver = tipJS.version = "1.33";
 	 */
 	var __getDefErrMsg = function(name){
 		return "Please check your " + name + " definition";
-	}
+	};
 
 	/**
 	 * overwrite Object 에 존재하는 속성 이외의 항목을 base Object의 속성과 병합
@@ -69,7 +69,7 @@ tipJS.ver = tipJS.version = "1.33";
 			overwrite[k] = base[k];
 		}
 		return overwrite;
-	}
+	};
 
 	/**
 	 * 자신을 확장하는지 체크
@@ -90,7 +90,7 @@ tipJS.ver = tipJS.version = "1.33";
 				return true;
 		}
 		return false;
-	}
+	};
 	/**
 	 * depart Object 를 departType 으로 등록
 	 *
@@ -122,7 +122,7 @@ tipJS.ver = tipJS.version = "1.33";
 			_sApp[departType] = _sApp[departType] || {};
 			_sApp[departType][_departName] = depart;
 		}
-	}
+	};
 
 	/**
 	 * Application 에 속하는 파일들을 경로가 포함된 파일로 리스트화
@@ -149,7 +149,7 @@ tipJS.ver = tipJS.version = "1.33";
 			_appRoot = __config__.applicationPath[_appName],
 			_departs = __uniqArray(define[depart]);
 		return __getUnitPathList(_appRoot, _path, _departs);
-	}
+	};
 
 	/**
 	 * Application 에 속하는 unit(depart)의 File Path를 작성
@@ -165,7 +165,7 @@ tipJS.ver = tipJS.version = "1.33";
 			_ret.push(rootPath + __wrapPath(unitPath) + unit[i]);
 		}
 		return _ret;
-	}
+	};
 
 	/**
 	 * JS File 의 NoCache 처리를 위한 Query String 을 작성
@@ -180,7 +180,7 @@ tipJS.ver = tipJS.version = "1.33";
 			file += config.paramName + "=" + config.version;
 		}
 		return file;
-	}
+	};
 
 	/**
 	 * JS File Load
@@ -202,15 +202,15 @@ tipJS.ver = tipJS.version = "1.33";
 						this.onreadystatechange = null;
 						callbackFn(this);
 					}
-				}
+				};
 			} else {
 				_tagScript.onload = function() {
 					callbackFn(this);
-				}
+				};
 			}
 		}
 		__getByTag('head')[0].appendChild(_tagScript);
-	}
+	};
 
 	/**
 	 * Application에 속해 있는 JS File 을 읽어들임
@@ -224,7 +224,7 @@ tipJS.ver = tipJS.version = "1.33";
 			if (__chkAppLoaded(appName, depart, scriptTag.src))
 				__afterAppLoaded(appName);
 		});
-	}
+	};
 
 	/**
 	 * Application에 속해 있는 각각의 Part 를 읽어들인 후 모두 완료되면 Application 초기화 메소드를 호출
@@ -241,7 +241,7 @@ tipJS.ver = tipJS.version = "1.33";
 			}
 		} else
 			__afterAppLoaded(appName);
-	}
+	};
 
 	/**
 	 * Model object 의 extension
@@ -263,7 +263,7 @@ tipJS.ver = tipJS.version = "1.33";
 			}
 		}
 		return child;
-	}
+	};
 
 	/**
 	 * Model object 의 extension
@@ -285,7 +285,7 @@ tipJS.ver = tipJS.version = "1.33";
 			else
 				return __mergeObj(child, __cloneObj(__loadCommonView(parent)));
 		}
-	}
+	};
 
 	/**
 	 * tipJS 의 config.js 에 정의된 commonModel 을 작성 후 반환
@@ -319,7 +319,7 @@ tipJS.ver = tipJS.version = "1.33";
 			_ret.__init();
 		}
 		return _ret;
-	}
+	};
 
 	/**
 	 * tipJS 의 define.js 에 정의된 Application Model 을 작성 후 반환
@@ -358,7 +358,7 @@ tipJS.ver = tipJS.version = "1.33";
 			_ret.__init();
 		}
 		return _ret;
-	}
+	};
 
 	/**
 	 * tipJS 의 config.js 에 정의된 commonViewModel 을 작성 후 반환
@@ -376,7 +376,7 @@ tipJS.ver = tipJS.version = "1.33";
 			_ret.__init();
 		}
 		return _ret;
-	}
+	};
 
 	/**
 	 * tipJS 의 define.js 에 정의된 Application ViewModel 을 작성 후 반환
@@ -395,7 +395,7 @@ tipJS.ver = tipJS.version = "1.33";
 			_ret.__init();
 		}
 		return _ret;
-	}
+	};
 
 	/**
 	 * tipJS 의 define.js 에 정의된 Application Model 을 작성 후 반환
@@ -406,13 +406,16 @@ tipJS.ver = tipJS.version = "1.33";
 	 */
 	tipJS.loadModel = function(appModelName, loadType) {
 		var _loadType = (typeof loadType == "boolean") ? loadType : false;
+		var _arrName = null, _appName = null, _modelName = null;
 		try {
-			var _arrName = appModelName.split("."), _appName = _arrName[0], _modelName = _arrName[1];
+			_arrName = appModelName.split(".");
+			_appName = _arrName[0]; 
+			_modelName = _arrName[1];
 		} catch(e) {
 			throw new Error("tipJS.loadModel : invalid parameter");
 		}
 		return __loadModel(_modelName, _loadType, _appName);
-	}
+	};
 
 	/**
 	 * tipJS 의 Application 정의 Object 를 반환
@@ -422,7 +425,7 @@ tipJS.ver = tipJS.version = "1.33";
 	 */
 	var __getAppDef = function(appName) {
 		return __app__[appName].define;
-	}
+	};
 
 	/**
 	 * Application 의 NoCache 설정정보 Object 를 반환
@@ -439,7 +442,7 @@ tipJS.ver = tipJS.version = "1.33";
 			_ret.paramName = _define.noCacheParam;
 		}
 		return _ret;
-	}
+	};
 
 	/**
 	 * Application 이 모두 load 된후 실행되는 메소드
@@ -448,6 +451,7 @@ tipJS.ver = tipJS.version = "1.33";
 	 * @param appName
 	 */
 	var __afterAppLoaded = function(appName) {
+		var k, _mdlName;
 		var _app = __app__[appName];
 		if (_app.loadOrder.isLastOrder() === false) {
 			__loadDepart(appName, _app.loadOrder.nextOrder());
@@ -458,7 +462,7 @@ tipJS.ver = tipJS.version = "1.33";
 		// Controller build
 		var _ctrlers = _app.controller = __departBase__[appName].controllers;
 		if (_ctrlers) {
-			for (var k in _ctrlers) {
+			for (k in _ctrlers) {
 				_ctrlers[k].loadCommonModel = __loadCommonModel;
 				_ctrlers[k].loadCommonView = __loadCommonView;
 				_ctrlers[k].loadModel = __loadModel;
@@ -470,8 +474,8 @@ tipJS.ver = tipJS.version = "1.33";
 			}
 		}
 		// commonModel build
-		for (var k in __commonModels__) {
-			var _mdlName = (__commonModels__[k].__name) ? __commonModels__[k].__name : __commonModels__[k].name;
+		for (k in __commonModels__) {
+			_mdlName = (__commonModels__[k].__name) ? __commonModels__[k].__name : __commonModels__[k].name;
 			__extModel(__commonModels__[k], "model");
 			if (_mdlName.lastIndexOf("VO") != (_mdlName.length - 2)) {
 				__commonModels__[k].loadCommonModel = __loadCommonModel;
@@ -484,8 +488,8 @@ tipJS.ver = tipJS.version = "1.33";
 		// Model build
 		var _mdls = __departBase__[appName].models;
 		if (_mdls) {
-			for (var k in _mdls) {
-				var _mdlName = (_mdls[k].__name) ? _mdls[k].__name : _mdls[k].name;
+			for (k in _mdls) {
+				_mdlName = (_mdls[k].__name) ? _mdls[k].__name : _mdls[k].name;
 				__extModel(_mdls[k], "model");
 				if (_mdlName.lastIndexOf("VO") != (_mdlName.length - 2)) {
 					_mdls[k].loadCommonModel = __loadCommonModel;
@@ -498,8 +502,8 @@ tipJS.ver = tipJS.version = "1.33";
 			}
 		}
 		// commonView build
-		for (var k in __commonViews__) {
-			var _mdlName = (__commonViews__[k].__name) ? __commonViews__[k].__name : __commonViews__[k].name;
+		for (k in __commonViews__) {
+			_mdlName = (__commonViews__[k].__name) ? __commonViews__[k].__name : __commonViews__[k].name;
 			__extModel(__commonViews__[k], "view");
 			__commonViews__[k].loadCommonView = __loadCommonView;
 			__commonViews__[k].renderTemplate = __getTpl;
@@ -511,8 +515,8 @@ tipJS.ver = tipJS.version = "1.33";
 		// View build
 		var _views = __departBase__[appName].views;
 		if (_views) {
-			for (var k in _views) {
-				var _mdlName = (_views[k].__name) ? _views[k].__name : _views[k].name;
+			for (k in _views) {
+				_mdlName = (_views[k].__name) ? _views[k].__name : _views[k].name;
 				__extModel(_views[k], "view");
 				_views[k].loadCommonView = __loadCommonView;
 				_views[k].loadView = __loadView;
@@ -533,7 +537,7 @@ tipJS.ver = tipJS.version = "1.33";
 			}
 			delete __reservedStack__[appName];
 		}
-	}
+	};
 
 	/**
 	 * Application 의 각 part 의 모든 File 이 load 되었는지 확인
@@ -544,9 +548,10 @@ tipJS.ver = tipJS.version = "1.33";
 	 * @return load 확인 Flag
 	 */
 	var __chkAppLoaded = function(appName, depart, src) {
+		var i;
 		var _requireList = __require__[appName][depart].requireList;
 
-		for (var i = _requireList.length; i--;) {
+		for (i = _requireList.length; i--;) {
 			if (_requireList[i] === true)
 				continue;
 
@@ -556,12 +561,12 @@ tipJS.ver = tipJS.version = "1.33";
 				break;
 			}
 		}
-		for (var i = _requireList.length; i--;) {
+		for (i = _requireList.length; i--;) {
 			if (_requireList[i] !== true)
 				return false;
 		}
 		return true;
-	}
+	};
 
 	/**
 	 * File 경로에 대한 Wrapper
@@ -571,7 +576,7 @@ tipJS.ver = tipJS.version = "1.33";
 	 */
 	var __wrapPath = function(path) {
 		return "/" + path + "/";
-	}
+	};
 
 	/**
 	 * 인수로 들어온 Object 의 복제를 반환(속도용)
@@ -582,17 +587,17 @@ tipJS.ver = tipJS.version = "1.33";
 	var __cloneObjN = function(target) {
 		if (typeof Object.create == "function") {
 			__cloneObjN = function(o) {
-				return Object.create(o)
-			}
+				return Object.create(o);
+			};
 		} else {
 			__cloneObjN = function(o) {
 				function F() {}
 				F.prototype = o;
 				return new F();
-			}
+			};
 		}
 		return __cloneObjN(target);
-	}
+	};
 
 	/**
 	 * 인수로 들어온 Object 의 복제를 반환
@@ -618,7 +623,7 @@ tipJS.ver = tipJS.version = "1.33";
 		} else {
 			return __cloneObjN(obj);
 		}
-	}
+	};
 
 	/**
 	 * 인수로 들어온 Object 가 단일 Object인가를 판별
@@ -632,7 +637,7 @@ tipJS.ver = tipJS.version = "1.33";
 				return true;
 		}
 		return false;
-	}
+	};
 
 	/**
 	 * 인수로 들어온 target object 의 내용을 console에 출력
@@ -651,7 +656,7 @@ tipJS.ver = tipJS.version = "1.33";
 			return;
 		}
 		if (typeof target != "object") {
-			if (typeof target == filter || filter == "")
+			if (typeof target == filter || filter === "")
 				console.log(((parentName) ? parentName + "." : "") + target + "["+ typeof target +"]");
 			return;
 		}
@@ -665,19 +670,19 @@ tipJS.ver = tipJS.version = "1.33";
 				if (typeof target[k] == "object"){
 					__echo(target[k], filter, ((parentName) ? parentName + "[" : "[") + k + ((parentName) ? "]" : "]"));
 				} else {
-					if (typeof target[k] == filter || filter == "")
+					if (typeof target[k] == filter || filter === "")
 						console.log(((parentName) ? parentName + "[" : "[") + k + ((parentName) ? "]" : "]") + ":" + target[k] + " ("+ typeof target[k] +")");
 				}
 			} else {
 				if (typeof target[k] == "object"){
 					__echo(target[k], filter, ((parentName) ? parentName + "." : "")+k);
 				} else {
-					if (typeof target[k] == filter || filter == "")
+					if (typeof target[k] == filter || filter === "")
 						console.log(((parentName) ? parentName + "." : "") + k + ":" + target[k] + " ("+ typeof target[k] +")");
 				}
 			}
 		}
-	}
+	};
 
 	/**
 	 * 인수로 들어온 array 의 요소들을 중복되지 않는 요소로 재작성 후 반환
@@ -695,7 +700,7 @@ tipJS.ver = tipJS.version = "1.33";
 			ret.push(arr[i]);
 		}
 		return ret;
-	}
+	};
 
 	/**
 	 * Application 별 __require__ Object 의 초기화
@@ -706,7 +711,7 @@ tipJS.ver = tipJS.version = "1.33";
 	var __initAppReqNS = function(appName, depart) {
 		var _sAppName = __require__[appName] = __require__[appName] || {};
 		_sAppName[depart] = _sAppName[depart] || {};
-	}
+	};
 
 	/**
 	 * tipJS 의 config.js 에 정의되어 있는 공통 JS File 을 읽어들임
@@ -727,7 +732,7 @@ tipJS.ver = tipJS.version = "1.33";
 			}
 			document.write('<script type="text/javascript" charset="' + (config.charSet ? config.charSet : __config__.charSet) + '" src="' + src + '"></script>');
 		}
-	}
+	};
 
 	/**
 	 * tipJS 의 config.js 에 정의되어 있는 내용을 tipJS에 반영
@@ -753,7 +758,7 @@ tipJS.ver = tipJS.version = "1.33";
 				}
 			}
 		}
-	}
+	};
 
 	/**
 	 * 초단위 반환
@@ -763,7 +768,7 @@ tipJS.ver = tipJS.version = "1.33";
 	var __getSecs = function(){
 		var _now = new Date();
 		return (_now.now) ? _now.now() : _now.getTime();
-	}
+	};
 
 	/* Benchmark */
 	tipJS.benchmark = {};
@@ -775,7 +780,7 @@ tipJS.ver = tipJS.version = "1.33";
 	 */
 	tipJS.benchmark.mark = function(markName){
 		__benchRecs__[markName] = __getSecs();
-	}
+	};
 
 	/**
 	 * Benchmark 용 키에 따라 경과시간을 출력
@@ -795,7 +800,7 @@ tipJS.ver = tipJS.version = "1.33";
 		else
 			tipJS.log("elapsed time[" + startName + " to " + endName + "] : " + _elapsedTime + " seconds", "[BENCHMARK]");
 		return _elapsedTime;
-	}
+	};
 
 	/* Template */
 	/**
@@ -818,9 +823,9 @@ tipJS.ver = tipJS.version = "1.33";
 		}
 		__getXMLReq = function() {
 			return _xmlreq;
-		}
+		};
 		return __getXMLReq();
-	}
+	};
 
 	/**
 	 * HTML Template File 을 읽어들인 후 file 내용을 반환
@@ -829,12 +834,14 @@ tipJS.ver = tipJS.version = "1.33";
 	 * @return Template string
 	 */
 	var __getTpl = function(config) {
+		var _retTxt;
+		var _appName = __app__.MAIN;
 		if (arguments.length > 1) {
 			return __renderTpl(arguments[0], arguments[1], arguments[2]);
 		}
-		var _appName = __app__.MAIN;
+
 		if (__getAppDef(_appName).templateCache && __templateCache__[config.url]) {
-			var _retTxt = __renderTpl(__templateCache__[config.url], config.data, config.tplId);
+			_retTxt = __renderTpl(__templateCache__[config.url], config.data, config.tplId);
 			if (typeof config.renderTo == "string")
 				__getById(config.renderTo).innerHTML += _retTxt;
 
@@ -852,7 +859,7 @@ tipJS.ver = tipJS.version = "1.33";
 		}
 
 		if (_xmlhttp.readyState == 4 && _xmlhttp.status == 200) {
-			var _retTxt = __templateCache__[config.url] = _xmlhttp.responseText;
+			_retTxt = __templateCache__[config.url] = _xmlhttp.responseText;
 			_retTxt = __renderTpl(_retTxt, config.data, config.tplId);
 			if (typeof config.renderTo == "string")
 				__getById(config.renderTo).innerHTML += _retTxt;
@@ -860,7 +867,7 @@ tipJS.ver = tipJS.version = "1.33";
 			return _retTxt;
 		} else
 			throw new Error("Could not find template file:" + _fileUrl);
-	}
+	};
 
 	/**
 	 * HTML Template 의 내용과 표시될 Data의 병합처리
@@ -892,7 +899,7 @@ tipJS.ver = tipJS.version = "1.33";
 			_evalFunc = new Function("data", __compileTpl(_tokens));
 
 		return _evalFunc(data);
-	}
+	};
 
 	/**
 	 * HTML Template 의 내용을 Parsing
@@ -903,14 +910,15 @@ tipJS.ver = tipJS.version = "1.33";
 	var __compileTpl = function(tokens) {
 		var _ret = [], _types = [], _newTokens = [],
 			_TYPE_PLANE = "PLN", _TYPE_VALUE = "VAL", _TYPE_PARSE = "PAS",
-			_cmdPush = '__tempArr__.push(';
+			_cmdPush = '__tempArr__.push(',
+			i, _token, _tokens;
 
 		_ret.push('var __tempArr__ = [];');
-		for (var i = 0, len = tokens.length; i < len; i++) {
-			var _token = tokens[i];
+		for (i = 0, len = tokens.length; i < len; i++) {
+			_token = tokens[i];
 
 			if (_token.indexOf("<@=") > -1) {
-				var _tokens = _token.split("<@=");
+				_tokens = _token.split("<@=");
 				if (_tokens.length > 1) {
 					_newTokens.push(_tokens[0].replace(/"/g, '\\"'));
 					_newTokens.push(_tokens[1]);
@@ -921,7 +929,7 @@ tipJS.ver = tipJS.version = "1.33";
 					_types.push(_TYPE_VALUE);
 				}
 			} else if (_token.indexOf("<@") > -1) {
-				var _tokens = _token.split("<@");
+				_tokens = _token.split("<@");
 				if (_tokens.length > 1) {
 					_newTokens.push(_tokens[0].replace(/"/g, '\\"'));
 					_newTokens.push(_tokens[1]);
@@ -936,8 +944,8 @@ tipJS.ver = tipJS.version = "1.33";
 				_types.push(_TYPE_PLANE);
 			}
 		} // for i
-		for (var i = 0, len = _newTokens.length; i < len; i++) {
-			var _token = _newTokens[i];
+		for (i = 0, len = _newTokens.length; i < len; i++) {
+			_token = _newTokens[i];
 			if (_types[i] == _TYPE_VALUE) {
 				_token = '"\"+' + _token + '+\""';
 				_ret.push(_cmdPush + _token + ");");
@@ -950,7 +958,7 @@ tipJS.ver = tipJS.version = "1.33";
 		}
 		_ret.push("return __tempArr__.join('');");
 		return _ret.join('');
-	}
+	};
 
 	/**
 	 * tipJS 의 commonModel 을 정의
@@ -970,7 +978,7 @@ tipJS.ver = tipJS.version = "1.33";
 			throw new Error("Can't extend itself:"+_mdlName);
 
 		__commonModels__[_mdlName] = commonModel;
-	}
+	};
 
 	/**
 	 * tipJS 의 commonView 를 정의
@@ -990,7 +998,7 @@ tipJS.ver = tipJS.version = "1.33";
 			throw new Error("Can't extend itself:"+_viewName);
 
 		__commonViews__[_viewName] = commonView;
-	}
+	};
 
 	/**
 	 * tipJS 의 console logger
@@ -1002,10 +1010,10 @@ tipJS.ver = tipJS.version = "1.33";
 		window.console = window.console || {
 			log : function() {},
 			error : function() {}
-		}
+		};
 		var _today = new Date(), _yyyy = _today.getFullYear(), _mm = _today.getMonth() + 1, _dd = _today.getDate(), _hh = _today.getHours(), _mi = _today.getMinutes(), _ss = _today.getSeconds(), _ms = _today.getMilliseconds();
 		console.log(((prefix) ? prefix : "") + _yyyy + '/' + _mm + '/' + _dd + ' ' + _hh + ':' + _mi + ':' + _ss + '.' + _ms + ' ' + msg);
-	}
+	};
 
 	/**
 	 * tipJS 의 console debugger
@@ -1015,7 +1023,7 @@ tipJS.ver = tipJS.version = "1.33";
 	tipJS.debug = function(msg) {
 		if (tipJS.isDevelopment)
 			tipJS.log(msg, "[DEBUG]");
-	}
+	};
 
 	/**
 	 * tipJS 의 localSet 정의 메소드
@@ -1025,7 +1033,7 @@ tipJS.ver = tipJS.version = "1.33";
 	tipJS.localSet = function(msgs) {
 		var _app = __app__[__app__.MAIN];
 		if (_app.loadOrder.presentOrder() === __DEF_BASE__.loadOrder.order[1]) __msg__ = msgs;
-	}
+	};
 
 	/**
 	 * tipJS 의 localSet 메세지 취득
@@ -1034,7 +1042,7 @@ tipJS.ver = tipJS.version = "1.33";
 	 */
 	tipJS.msg = function(key){
 		return __msg__[key] ? __msg__[key] : key;
-	}
+	};
 
 	/**
 	 * tipJS 의 Controller 정의 메소드
@@ -1043,7 +1051,7 @@ tipJS.ver = tipJS.version = "1.33";
 	 */
 	tipJS.controller = function(ctrler) {
 		__registDepart("controllers", ctrler);
-	}
+	};
 
 	/**
 	 * tipJS 의 Application Model 정의 메소드
@@ -1052,7 +1060,7 @@ tipJS.ver = tipJS.version = "1.33";
 	 */
 	tipJS.model = function(model) {
 		__registDepart("models", model);
-	}
+	};
 
 	/**
 	 * tipJS 의 Application View 정의 메소드
@@ -1061,7 +1069,7 @@ tipJS.ver = tipJS.version = "1.33";
 	 */
 	tipJS.view = function(view) {
 		__registDepart("views", view);
-	}
+	};
 
 	/**
 	 * tipJS 의 Application Controller 호출 메소드
@@ -1073,7 +1081,7 @@ tipJS.ver = tipJS.version = "1.33";
 		var _arrName = ctrlerName.split("."),
 		_appName = _arrName[0],
 		_ctrlerName = _arrName[1];
-		if (_appName.length == 0 || _ctrlerName.length == 0) {
+		if (_appName.length === 0 || _ctrlerName.length === 0) {
 			throw new Error("tipJS.action : invalid parameter");
 		}		
 
@@ -1110,7 +1118,7 @@ tipJS.ver = tipJS.version = "1.33";
 			getById : _ctrler.getById,
 			getByName : _ctrler.getByName,
 			getByTag : _ctrler.getByTag
-		}
+		};
 
 		if (_ctrlerWrapper.beforeCtrler && _ctrlerWrapper.beforeCtrler(params) === false)
 			return;
@@ -1120,21 +1128,21 @@ tipJS.ver = tipJS.version = "1.33";
 				var _invoke2 = function() {
 					if (_ctrler.afterInvoke)
 						_ctrler.afterInvoke(params);
-				}
+				};
 				var _invoke1 = function() {
 					if (_ctrler.invoke && _ctrler.invoke(params) === false)
 						return;
 
 					_invoke2();
-				}
+				};
 				var _invoke = function() {
 					if (_ctrler.beforeInvoke && _ctrler.beforeInvoke(params) === false)
 						return;
 
 					_invoke1();
-				}
+				};
 				_invoke();
-			}
+			};
 			if (_ctrler.exceptionInvoke) {
 				try {
 					_ctrlInvoke();
@@ -1149,13 +1157,13 @@ tipJS.ver = tipJS.version = "1.33";
 
 			if (tipJS.isDevelopment === true)
 				tipJS.debug(ctrlerName + " completed in " + ((__getSecs() - _ctrlerStartTime)/1000) + " seconds");
-		} // _doCtrler
+		}; // _doCtrler
 
 		if (_ctrler.async === true)
 			setTimeout(_doCtrler, (!_ctrler.delay ? 15 : _ctrler.delay));
 		else
 			_doCtrler();
-	}
+	};
 
 	/**
 	 * tipJS 의 Application Load 메소드
@@ -1184,7 +1192,7 @@ tipJS.ver = tipJS.version = "1.33";
 			});
 		}
 		delete tipJS.loadApp;
-	}
+	};
 
 	/**
 	 * tipJS 의 Application 정의 메소드
@@ -1222,7 +1230,7 @@ tipJS.ver = tipJS.version = "1.33";
 		__initAppReqNS(_appName, _depart);
 		__app__[_appName].define = define;
 		__loadDepart(_appName, _depart);
-	}
+	};
 
 	/*
 	 * Booting tipJS

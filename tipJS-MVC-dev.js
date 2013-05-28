@@ -30,7 +30,7 @@
 	 *  RegExp
 	 */
 	var __types = [ 'Arguments', 'Function', 'String', 'Number', 'Boolean', 'Date', 'RegExp' ];
-	for(var t = 0, lt=__types.length; t < lt; t = t + 1) {
+	for(var t = 0, lt=__types.length; t < lt; t++) {
 		(function(type) {
 			tipJS['is' + type] = function(obj) {
 				return __oString.call(obj) === '[object '+type+']';
@@ -112,7 +112,7 @@
 	 * @return errMsg
 	 */
 	var __getDefErrMsg = function(name){
-		return "Please check your " + name + " definition";
+		return "Please : define " + name;
 	};
 
 	/**
@@ -166,7 +166,7 @@
 			throw new Error(__getDefErrMsg(departType));
 
 		if (depart.__extend && departType != "controllers" && __isSelfExt(depart.__extend, _appDepartName)) {
-			throw new Error("Can't extend itself:" + _appDepartName);
+			throw new Error("Can't extend itself: " + _appDepartName);
 		}
 
 		var _arrAppDepart = _appDepartName.split("."),
@@ -357,7 +357,7 @@
 	var __loadCommonModel = tipJS.loadCommonModel = function(modelName, loadType) {
 		var _models = __commonModels__;
 		if (!_models[modelName] || _models[modelName] === undefined)
-			throw new Error("Could not find commonModel: " + modelName);
+			throw new Error("Can't find commonModel: " + modelName);
 
 		// synchronized model
 		if (loadType === true) {
@@ -394,7 +394,7 @@
 			_models = __departBase__[_appName].models;
 
 		if (!_models[modelName] || _models[modelName] === undefined)
-			throw new Error("Could not find model: " + modelName);
+			throw new Error("Can't find model: " + modelName);
 
 		// synchronized model
 		if (loadType === true) {
@@ -429,7 +429,7 @@
 	var __loadCommonView = function(viewName) {
 		var _views = __commonViews__;
 		if (!_views || !_views[viewName] || _views[viewName] === undefined)
-			throw new Error("Could not find commonView: " + viewName);
+			throw new Error("Can't find commonView: " + viewName);
 
 		var _ret = __cloneObj(_views[viewName], __isFlat__["CommonView"+viewName]);
 		if (tipJS.isFunction(_ret.__init)) {
@@ -448,7 +448,7 @@
 		var _appName = (!appName) ? __app__.MAIN : appName,
 			_views = __departBase__[_appName].views;
 		if (!_views || !_views[viewName] || _views[viewName] === undefined)
-			throw new Error("Could not find view: " + viewName);
+			throw new Error("Can't find view: " + viewName);
 
 		var _ret = __cloneObj(_views[viewName], __isFlat__["views"+_appName+"."+viewName]);
 		if (tipJS.isFunction(_ret.__init)) {
@@ -517,17 +517,17 @@
 			for (_ctrlName in _ctrlers){
 				_ctrler = __cloneObj(_ctrlers[_ctrlName]);
 				_ctrlerWrapper = {
-					controllerName:(_ctrler.__name) ? _ctrler.__name : _ctrler.name,
-					beforeCtrler : _app.define.beforeController,
-					afterCtrler : _app.define.afterController,
+					controllerName  : (_ctrler.__name) ? _ctrler.__name : _ctrler.name,
+					beforeCtrler    : _app.define.beforeController,
+					afterCtrler     : _app.define.afterController,
 					loadCommonModel : _ctrler.loadCommonModel,
-					loadCommonView : _ctrler.loadCommonView,
-					loadModel : _ctrler.loadModel,
-					loadView : _ctrler.loadView,
-					renderTemplate : _ctrler.renderTemplate,
-					getById : _ctrler.getById,
-					getByName : _ctrler.getByName,
-					getByTag : _ctrler.getByTag
+					loadCommonView  : _ctrler.loadCommonView,
+					loadModel       : _ctrler.loadModel,
+					loadView        : _ctrler.loadView,
+					renderTemplate  : _ctrler.renderTemplate,
+					getById         : _ctrler.getById,
+					getByName       : _ctrler.getByName,
+					getByTag        : _ctrler.getByTag
 				};
 				__appCtrl__[_appName][_ctrlName] = (function(wrapper, ctrler){
 					return function(){
@@ -1013,7 +1013,7 @@
 
 			return _retTxt;
 		} else
-			throw new Error("Could not find templates file:" + _fileUrl);
+			throw new Error("Can't find templates file: " + _fileUrl);
 	};
 
 	/**
@@ -1122,7 +1122,7 @@
 			throw new Error(__getDefErrMsg(_type));
 
 		if (commonModel.__extend && __isSelfExt(commonModel.__extend, _mdlName))
-			throw new Error("Can't extend itself:"+_mdlName);
+			throw new Error("Can't extend itself: "+_mdlName);
 
 		__commonModels__[_mdlName] = commonModel;
 	};
@@ -1142,7 +1142,7 @@
 			throw new Error(__getDefErrMsg(_type));
 
 		if (commonView.__extend && __isSelfExt(commonView.__extend, _viewName))
-			throw new Error("Can't extend itself:"+_viewName);
+			throw new Error("Can't extend itself: "+_viewName);
 
 		__commonViews__[_viewName] = commonView;
 	};
@@ -1269,7 +1269,7 @@
 			var _filePath = __config__.applicationPath[_appName]+"/"+__config__.defineFileName+".js";
 			setTimeout(function() {
 				if (!__app__[_appName] || !__app__[_appName].define)
-					throw new Error("Could not find application:"+_appName);
+					throw new Error("Can't find application: "+_appName);
 			}, 1000);
 			__loadJsFile(_filePath, {
 				nocache : true,

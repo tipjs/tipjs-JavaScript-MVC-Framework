@@ -991,6 +991,7 @@
 	var __loadCommonJSFiles = function(config, arrayJS) {
 		for (var i = 0, len = arrayJS.length; i < len; i++) {
 			var src = arrayJS[i];
+			if(!src.match(/^\/|\.\/|http/g)) src = _filepath + src; //경로가 지정되지 않으면 _filepath 를 coreRoot로 설정.
 			if (config.noCache && config.noCache === true) {
 				src += (src.indexOf("?") < 0) ? "?" : "&";
 				src += (config.noCacheParam ? config.noCacheParam : __config__.noCacheParam) + "=";
@@ -1017,6 +1018,13 @@
 		}
 		if (config.commonView) {
 			__loadCommonJSFiles(config, config.commonView);
+		}
+		if (config.applicationPath){ //경로가 지정되지 않으면 _filepath 를 coreRoot로 설정.
+			for (var k in config.applicationPath){
+				var src = config.applicationPath[k];
+				if(!src.match(/^\/|\.\/|http/g)) src = _filepath + src; 
+				config.applicationPath[k] = src;
+			}
 		}
 		__config__ = __mergeObj(config, __DEF_BASE__.config);
 		if (tipJS.isDevelopment === null) {
@@ -1463,6 +1471,7 @@
 	__commonViews__ = {},
 	__DEF_BASE__ = {
 		config : {
+			coreRoot : false,
 			noCache : false,
 			noCacheVersion : 1.000,
 			noCacheParam : "noCacheVersion",
@@ -1518,16 +1527,22 @@
 	__reservedStack__ = {},
 	__config__ = __cloneObj(__DEF_BASE__.config),
 	__isFlat__ = {},
-	_winLoc = window.location, _pathname = _winLoc.pathname, _queryString = _winLoc.search, _scripts = __getByTag('script'), _filepath, _scriptSrc, _match, _isDevelopment = null, _lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage).substr(0,2);
+	_winLoc = window.location, 
+	_pathname = _winLoc.pathname, 
+	_queryString = _winLoc.search, 
+	_scripts = __getByTag('script'), _filepath, 
+	_scriptSrc, 
+	_match, 
+	_isDevelopment = null, _lang = (navigator.language || navigator.systemLanguage || navigator.userLanguage).substr(0,2);
 
-	for (var i = _scripts.length; i--;) {
-		_scriptSrc = _scripts[i].src;
-		_match = _scriptSrc.match(/tipJS-MVC-dev\.js$/);
-		if (_match) {
-			_filepath = _scriptSrc.substring(0, _scriptSrc.length - _match[0].length);
-			break;
+		for (var i = _scripts.length; i--;) {
+			_scriptSrc = _scripts[i].src;
+			_match = _scriptSrc.match(/tipJS-MVC-dev\.min\.js$/) || _scriptSrc.match(/tipJS-MVC-dev\.js$/); // minifying 시 Source 이원화 방지.
+			if (_match) {
+				_filepath = _scriptSrc.substring(0, _scriptSrc.length - _match[0].length);
+				break;
+			}
 		}
-	}
 
 	if (_queryString.match('(\\?|&)debug') !== null || _pathname.match('debug') !== null)
 		_isDevelopment = true;

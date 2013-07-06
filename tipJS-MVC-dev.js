@@ -1471,7 +1471,6 @@
 	__commonViews__ = {},
 	__DEF_BASE__ = {
 		config : {
-			coreRoot : false,
 			noCache : false,
 			noCacheVersion : 1.000,
 			noCacheParam : "noCacheVersion",

@@ -1,5 +1,5 @@
 /*
- * tipJS - OpenSource Javascript MVC Framework ver.1.43
+ * tipJS - OpenSource Javascript MVC Framework ver.1.43b
  *
  * Copyright 2012.07 SeungHyun PAEK
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -11,7 +11,7 @@
 	"use strict";
 
 	var tipJS = {};
-	tipJS.ver = tipJS.version = tipJS.VERSION = "1.43";
+	tipJS.ver = tipJS.version = tipJS.VERSION = "1.43b";
 
 	context.tipJS = tipJS;
 
@@ -90,12 +90,12 @@
 		return !obj ? document.getElementsByTagName(tag):obj.getElementsByTagName(tag);
 	};
 
-  /**
-   * Array-liked-Object를 배열화함.
-   * @param obj
-   * @returns Array
-   * @private
-   */
+	/**
+	 * Array-liked-Object를 배열화함.
+	 * @param obj
+	 * @returns Array
+	 * @private
+	 */
 	var __toArray = function(obj) {
 		var _ret = [];
 		if (obj.length) {
@@ -511,7 +511,7 @@
 	var __makeAppCtrl = function(){
 		var _appName, _app, _ctrlers, _ctrlName, _ctrler, _ctrlerWrapper;
 		for (_appName in __app__) {
-			__appCtrl__[_appName] = {};
+			__appCtrl__[_appName] = tipJS.action[_appName] = {};
 			_app = __app__[_appName];
 			_ctrlers = _app.controller;
 			for (_ctrlName in _ctrlers){
@@ -811,8 +811,10 @@
 		if (__reservedStack__ && __reservedStack__[appName]) {
 			var _reservedAction = __reservedStack__[appName];
 			for (var i = 0, actionLen = _reservedAction.length; i < actionLen; i++) {
-				var _actionObj = _reservedAction[i];
-				tipJS.action(_actionObj.name, _actionObj.param);
+				var _action = _reservedAction[i];
+				var _appCtrl = _action.name.split(".");
+				var _ctrler = tipJS.action[_appCtrl[0]][_appCtrl[1]];
+				_ctrler.apply(_ctrler, _action.param);
 			}
 			delete __reservedStack__[appName];
 		}
@@ -1363,25 +1365,24 @@
 		var _arrName, _appName, _ctrlerName, _app, _ctrler;
 		if (!arguments.length) {
 			return __appCtrl__;
-		} else {
-			var _appCtrlName = arguments[0];
-			var _args = __toArray(arguments).slice(1);
-			_arrName = _appCtrlName.split(".");
-			if ((_appName = _arrName[0]).length == 0 || (_ctrlerName = _arrName[1]).length == 0)
-				throw new Error("tipJS.action : invalid parameter");
-
-			_app = __app__[_appName];
-			if (!_app || !_app.loadOrder || !_app.loadOrder.isLastOrder()) {
-				__reservedStack__[_appName] = __reservedStack__[_appName] || [];
-				__reservedStack__[_appName].push({
-					name : _appCtrlName,
-					param : _args
-				});
-				return;
-			}
-			_ctrler = __appCtrl__[_appName][_ctrlerName];
-			_ctrler.apply(_ctrler, _args);
 		}
+		var _appCtrlName = arguments[0];
+		var _args = __toArray(arguments).slice(1);
+		_arrName = _appCtrlName.split(".");
+		if ((_appName = _arrName[0]).length == 0 || (_ctrlerName = _arrName[1]).length == 0)
+			throw new Error("tipJS.action : invalid parameter");
+
+		_app = __app__[_appName];
+		if (!_app || !_app.loadOrder || !_app.loadOrder.isLastOrder()) {
+			__reservedStack__[_appName] = __reservedStack__[_appName] || [];
+			__reservedStack__[_appName].push({
+				name : _appCtrlName,
+				param : _args
+			});
+			return;
+		}
+		_ctrler = __appCtrl__[_appName][_ctrlerName];
+		_ctrler.apply(_ctrler, _args);
 	};
 
 	/**

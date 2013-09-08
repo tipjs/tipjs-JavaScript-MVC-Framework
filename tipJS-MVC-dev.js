@@ -1,5 +1,5 @@
 /*
- * tipJS - OpenSource Javascript MVC Framework ver.1.43a
+ * tipJS - OpenSource Javascript MVC Framework ver.1.43b
  *
  * Copyright 2012.07 SeungHyun PAEK
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -11,7 +11,7 @@
 	"use strict";
 
 	var tipJS = {};
-	tipJS.ver = tipJS.version = tipJS.VERSION = "1.43a";
+	tipJS.ver = tipJS.version = tipJS.VERSION = "1.43b";
 
 	context.tipJS = tipJS;
 
@@ -811,8 +811,10 @@
 		if (__reservedStack__ && __reservedStack__[appName]) {
 			var _reservedAction = __reservedStack__[appName];
 			for (var i = 0, actionLen = _reservedAction.length; i < actionLen; i++) {
-				var _actionObj = _reservedAction[i];
-				tipJS.action(_actionObj.name, _actionObj.param);
+				var _action = _reservedAction[i];
+				var _appCtrl = _action.name.split(".");
+				var _ctrler = tipJS.action[_appCtrl[0]][_appCtrl[1]];
+				_ctrler.apply(_ctrler, _action.param);
 			}
 			delete __reservedStack__[appName];
 		}

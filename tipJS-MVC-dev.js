@@ -1,5 +1,5 @@
 /*
- * tipJS - OpenSource Javascript MVC Framework ver.1.43b
+ * tipJS - OpenSource Javascript MVC Framework ver.1.43c
  *
  * Copyright 2012.07 SeungHyun PAEK
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -11,7 +11,7 @@
 	"use strict";
 
 	var tipJS = {};
-	tipJS.ver = tipJS.version = tipJS.VERSION = "1.43b";
+	tipJS.ver = tipJS.version = tipJS.VERSION = "1.43c";
 
 	context.tipJS = tipJS;
 
@@ -622,11 +622,13 @@
 	 */
 	var __setBeforeAdvice = function(func, depart, interceptor){
 		return function(){
-			var _before = interceptor.before;
+			var _before = interceptor.before, _ret;
 			for (var i=0,len=_before.length; i<len; i++){
-				_before[i].apply(depart, arguments);
+				_ret = _before[i].apply(depart, arguments);
+				if (_ret !== undefined) return _ret;
 			}
-			func.apply(depart, arguments);
+			_ret = func.apply(depart, arguments);
+			if (_ret !== undefined) return _ret;
 		};
 	}
 
@@ -640,10 +642,12 @@
 	 */
 	var __setAfterAdvice = function(func, depart, interceptor){
 		return function(){
-			var _after = interceptor.after;
-			func.apply(depart, arguments);
+			var _after = interceptor.after, _ret;
+			_ret = func.apply(depart, arguments);
+			if (_ret !== undefined) return _ret;
 			for (var i=0,len=_after.length; i<len; i++){
-				_after[i].apply(depart, arguments);
+				_ret = _after[i].apply(depart, arguments);
+				if (_ret !== undefined) return _ret;
 			}
 		};
 	}

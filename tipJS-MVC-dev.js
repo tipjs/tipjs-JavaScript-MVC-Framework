@@ -1,5 +1,5 @@
 /*
- * tipJS - OpenSource Javascript MVC Framework ver.1.43c
+ * tipJS - OpenSource Javascript MVC Framework ver.1.43d
  *
  * Copyright 2012.07 SeungHyun PAEK
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -11,7 +11,7 @@
 	"use strict";
 
 	var tipJS = {};
-	tipJS.ver = tipJS.version = tipJS.VERSION = "1.43c";
+	tipJS.ver = tipJS.version = tipJS.VERSION = "1.43d";
 
 	context.tipJS = tipJS;
 
@@ -531,7 +531,7 @@
 				};
 				__appCtrl__[_appName][_ctrlName] = (function(wrapper, ctrler){
 					return function(){
-						var _args = arguments, _ctrlerStartTime, _doCtrler;
+						var _args = arguments, _ctrlerStartTime, _runCtrler;
 						if (tipJS.isDevelopment === true)
 							_ctrlerStartTime = __getSecs();
 
@@ -539,51 +539,42 @@
 							return;
 						}
 
-						_doCtrler = function() {
-							var _ctrlInvoke = function() {
-								var _invoke2 = function() {
-									if (ctrler.afterInvoke)
-										ctrler.afterInvoke.apply(ctrler, _args);
-								};
-								var _invoke1 = function() {
-									if (ctrler.invoke && ctrler.invoke.apply(ctrler, _args) === false)
-										return;
-
-									_invoke2();
-								};
-								var _invoke = function() {
-									if (ctrler.beforeInvoke && ctrler.beforeInvoke.apply(ctrler, _args) === false)
-										return;
-
-									_invoke1();
-								};
-								_invoke();
-							};
+						_runCtrler = function() {
 							if (ctrler.exceptionInvoke) {
 								try {
-									_ctrlInvoke();
+									__runController(ctrler, _args);
 								} catch (e) {
-									(_args = __toArray(_args)).unshift(e);
+									(_args = util__.toArray(_args)).unshift(e);
 									ctrler.exceptionInvoke.apply(ctrler, _args);
 								}
 							} else
-								_ctrlInvoke();
+								__runController(ctrler, _args);
 
 							if (wrapper.afterCtrler)
 								wrapper.afterCtrler.apply(wrapper, _args);
 
 							if (tipJS.isDevelopment === true)
 								tipJS.debug(wrapper.controllerName + " completed in " + ((__getSecs() - _ctrlerStartTime)/1000) + " seconds");
-						}; // _doCtrler
-						
+						}; // _runCtrler
+
 						if (ctrler.async === true)
-							setTimeout(_doCtrler, (!ctrler.delay ? 15 : ctrler.delay));
+							setTimeout(_runCtrler, (!ctrler.delay ? 15 : ctrler.delay));
 						else
-							_doCtrler();
+							_runCtrler();
 					}
 				})(_ctrlerWrapper, _ctrler);
 			}
 		}
+	};
+
+	/**
+	 * 컨트롤러 실행
+	 *
+	 */
+	var __runController = function(ctrler, args){
+		if (ctrler.beforeInvoke && ctrler.beforeInvoke.apply(ctrler, args) === false) return;
+		if (ctrler.invoke && ctrler.invoke.apply(ctrler, args) === false) return;
+		if (ctrler.afterInvoke)	ctrler.afterInvoke.apply(ctrler, args);
 	};
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * tipJS - OpenSource Javascript MVC Framework ver.1.43
+ * tipJS - OpenSource Javascript MVC Framework ver.1.43d
  *
  * Copyright 2012.07 SeungHyun PAEK
  * Dual licensed under the MIT or GPL Version 2 licenses.
@@ -11,7 +11,7 @@
 	"use strict";
 
 	var tipJS = {};
-	tipJS.ver = tipJS.version = tipJS.VERSION = "1.43";
+	tipJS.ver = tipJS.version = tipJS.VERSION = "1.43d";
 
 	context.tipJS = tipJS;
 
@@ -90,12 +90,12 @@
 		return !obj ? document.getElementsByTagName(tag):obj.getElementsByTagName(tag);
 	};
 
-  /**
-   * Array-liked-Object를 배열화함.
-   * @param obj
-   * @returns Array
-   * @private
-   */
+	/**
+	 * Array-liked-Object를 배열화함.
+	 * @param obj
+	 * @returns Array
+	 * @private
+	 */
 	var __toArray = function(obj) {
 		var _ret = [];
 		if (obj.length) {
@@ -511,7 +511,7 @@
 	var __makeAppCtrl = function(){
 		var _appName, _app, _ctrlers, _ctrlName, _ctrler, _ctrlerWrapper;
 		for (_appName in __app__) {
-			__appCtrl__[_appName] = {};
+			__appCtrl__[_appName] = tipJS.action[_appName] = {};
 			_app = __app__[_appName];
 			_ctrlers = _app.controller;
 			for (_ctrlName in _ctrlers){
@@ -531,7 +531,7 @@
 				};
 				__appCtrl__[_appName][_ctrlName] = (function(wrapper, ctrler){
 					return function(){
-						var _args = arguments, _ctrlerStartTime, _doCtrler;
+						var _args = arguments, _ctrlerStartTime, _runCtrler;
 						if (tipJS.isDevelopment === true)
 							_ctrlerStartTime = __getSecs();
 
@@ -539,51 +539,42 @@
 							return;
 						}
 
-						_doCtrler = function() {
-							var _ctrlInvoke = function() {
-								var _invoke2 = function() {
-									if (ctrler.afterInvoke)
-										ctrler.afterInvoke.apply(ctrler, _args);
-								};
-								var _invoke1 = function() {
-									if (ctrler.invoke && ctrler.invoke.apply(ctrler, _args) === false)
-										return;
-
-									_invoke2();
-								};
-								var _invoke = function() {
-									if (ctrler.beforeInvoke && ctrler.beforeInvoke.apply(ctrler, _args) === false)
-										return;
-
-									_invoke1();
-								};
-								_invoke();
-							};
+						_runCtrler = function() {
 							if (ctrler.exceptionInvoke) {
 								try {
-									_ctrlInvoke();
+									__runController(ctrler, _args);
 								} catch (e) {
-									(_args = __toArray(_args)).unshift(e);
+									(_args = util__.toArray(_args)).unshift(e);
 									ctrler.exceptionInvoke.apply(ctrler, _args);
 								}
 							} else
-								_ctrlInvoke();
+								__runController(ctrler, _args);
 
 							if (wrapper.afterCtrler)
 								wrapper.afterCtrler.apply(wrapper, _args);
 
 							if (tipJS.isDevelopment === true)
 								tipJS.debug(wrapper.controllerName + " completed in " + ((__getSecs() - _ctrlerStartTime)/1000) + " seconds");
-						}; // _doCtrler
-						
+						}; // _runCtrler
+
 						if (ctrler.async === true)
-							setTimeout(_doCtrler, (!ctrler.delay ? 15 : ctrler.delay));
+							setTimeout(_runCtrler, (!ctrler.delay ? 15 : ctrler.delay));
 						else
-							_doCtrler();
+							_runCtrler();
 					}
 				})(_ctrlerWrapper, _ctrler);
 			}
 		}
+	};
+
+	/**
+	 * 컨트롤러 실행
+	 *
+	 */
+	var __runController = function(ctrler, args){
+		if (ctrler.beforeInvoke && ctrler.beforeInvoke.apply(ctrler, args) === false) return;
+		if (ctrler.invoke && ctrler.invoke.apply(ctrler, args) === false) return;
+		if (ctrler.afterInvoke)	ctrler.afterInvoke.apply(ctrler, args);
 	};
 
 	/**
@@ -622,11 +613,13 @@
 	 */
 	var __setBeforeAdvice = function(func, depart, interceptor){
 		return function(){
-			var _before = interceptor.before;
+			var _before = interceptor.before, _ret;
 			for (var i=0,len=_before.length; i<len; i++){
-				_before[i].apply(depart, arguments);
+				_ret = _before[i].apply(depart, arguments);
+				if (_ret !== undefined) return _ret;
 			}
-			func.apply(depart, arguments);
+			_ret = func.apply(depart, arguments);
+			if (_ret !== undefined) return _ret;
 		};
 	}
 
@@ -640,10 +633,12 @@
 	 */
 	var __setAfterAdvice = function(func, depart, interceptor){
 		return function(){
-			var _after = interceptor.after;
-			func.apply(depart, arguments);
+			var _after = interceptor.after, _ret;
+			_ret = func.apply(depart, arguments);
+			if (_ret !== undefined) return _ret;
 			for (var i=0,len=_after.length; i<len; i++){
-				_after[i].apply(depart, arguments);
+				_ret = _after[i].apply(depart, arguments);
+				if (_ret !== undefined) return _ret;
 			}
 		};
 	}
@@ -811,8 +806,10 @@
 		if (__reservedStack__ && __reservedStack__[appName]) {
 			var _reservedAction = __reservedStack__[appName];
 			for (var i = 0, actionLen = _reservedAction.length; i < actionLen; i++) {
-				var _actionObj = _reservedAction[i];
-				tipJS.action(_actionObj.name, _actionObj.param);
+				var _action = _reservedAction[i];
+				var _appCtrl = _action.name.split(".");
+				var _ctrler = tipJS.action[_appCtrl[0]][_appCtrl[1]];
+				_ctrler.apply(_ctrler, _action.param);
 			}
 			delete __reservedStack__[appName];
 		}
@@ -1363,25 +1360,24 @@
 		var _arrName, _appName, _ctrlerName, _app, _ctrler;
 		if (!arguments.length) {
 			return __appCtrl__;
-		} else {
-			var _appCtrlName = arguments[0];
-			var _args = __toArray(arguments).slice(1);
-			_arrName = _appCtrlName.split(".");
-			if ((_appName = _arrName[0]).length == 0 || (_ctrlerName = _arrName[1]).length == 0)
-				throw new Error("tipJS.action : invalid parameter");
-
-			_app = __app__[_appName];
-			if (!_app || !_app.loadOrder || !_app.loadOrder.isLastOrder()) {
-				__reservedStack__[_appName] = __reservedStack__[_appName] || [];
-				__reservedStack__[_appName].push({
-					name : _appCtrlName,
-					param : _args
-				});
-				return;
-			}
-			_ctrler = __appCtrl__[_appName][_ctrlerName];
-			_ctrler.apply(_ctrler, _args);
 		}
+		var _appCtrlName = arguments[0];
+		var _args = __toArray(arguments).slice(1);
+		_arrName = _appCtrlName.split(".");
+		if ((_appName = _arrName[0]).length == 0 || (_ctrlerName = _arrName[1]).length == 0)
+			throw new Error("tipJS.action : invalid parameter");
+
+		_app = __app__[_appName];
+		if (!_app || !_app.loadOrder || !_app.loadOrder.isLastOrder()) {
+			__reservedStack__[_appName] = __reservedStack__[_appName] || [];
+			__reservedStack__[_appName].push({
+				name : _appCtrlName,
+				param : _args
+			});
+			return;
+		}
+		_ctrler = __appCtrl__[_appName][_ctrlerName];
+		_ctrler.apply(_ctrler, _args);
 	};
 
 	/**

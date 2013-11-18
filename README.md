@@ -1,4 +1,4 @@
-[tipJS2 released. click here](https://github.com/tipJS-Team/tipJS)
+[tipJS 2 released. click here](https://github.com/tipJS-Team/tipJS)
 ===
 # tipJS JavaScript MVC Framework Guide
 ## 1. Overview of tipJS JavaScript MVC Framework
